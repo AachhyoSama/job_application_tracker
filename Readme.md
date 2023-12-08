@@ -83,4 +83,4 @@ npm start
 
 The frontend server starts on port 3000. So, you can copy the link and paste in your browser to start using the project.
 
-Link: [https://localhost:3000](https://localhost:3000)# job_application_tracker
+Link: [https://localhost:3000](https://localhost:3000)

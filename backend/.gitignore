@@ -4,3 +4,6 @@
 .env
 *.cert
 *.key
+
+.gitignore
+.DS_Store

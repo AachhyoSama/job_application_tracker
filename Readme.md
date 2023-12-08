@@ -26,7 +26,7 @@ Copy the URL from the repository and follow below:
     Get into the backend folder:
 
     ```
-    cd backend
+    cd back-end
     npm install
     ```
 
@@ -69,7 +69,7 @@ Link: [https://localhost:8080](https://localhost:8080)
     Get into the frontend folder:
 
     ```
-    cd frontend
+    cd front-end
     npm install
     ```
 

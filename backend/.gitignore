@@ -1,9 +1,0 @@
-# dependencies
-/node_modules
-
-.env
-*.cert
-*.key
-
-.gitignore
-.DS_Store

@@ -1,6 +1,7 @@
 import express from "express";
 import { AuthModel } from "../models/authModel.js";
 import { generateToken } from "../utils/authUtil.js";
+import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const authController = express.Router();
 const authModel = new AuthModel();

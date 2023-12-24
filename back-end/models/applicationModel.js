@@ -27,11 +27,14 @@ export class ApplicationModel {
         }
     };
 
-    getAllApplications = async () => {
+    getAllApplicationsByUserId = async (userId) => {
         try {
             const applications = await this.db
                 .collection("applications")
                 .aggregate([
+                    {
+                        $match: { userId: new ObjectId(userId) },
+                    },
                     {
                         $lookup: {
                             from: "jobs",
@@ -62,16 +65,20 @@ export class ApplicationModel {
 
             return applications;
         } catch (error) {
-            console.error("Error getting all applications:", error);
+            console.error("Error getting applications by user ID:", error);
             throw error;
         }
     };
 
-    createApplication = async (applicationData) => {
+    createApplicationByUserId = async (userId, applicationData) => {
         try {
+            // Add the userId to the applicationData
+            applicationData.userId = new ObjectId(userId);
+
             const newApplication = await this.db
                 .collection("applications")
                 .insertOne(applicationData);
+
             return newApplication;
         } catch (error) {
             console.error("Error creating Application:", error);

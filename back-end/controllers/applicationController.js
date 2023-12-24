@@ -2,6 +2,7 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { ApplicationModel } from "../models/applicationModel.js";
 import { JobModel } from "../models/jobModel.js";
+import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const applicationController = express.Router();
 const applicationModel = new ApplicationModel();
@@ -11,24 +12,28 @@ const jobModel = new JobModel();
 applicationModel.connect();
 jobModel.connect();
 
-// Get all applications
-applicationController.get("/", async (req, res) => {
+// Get all applications for the logged-in user
+applicationController.get("/", authenticateUser, async (req, res) => {
     try {
-        const applications = await applicationModel.getAllApplications();
+        const userId = req.user.userId; // Get the user ID from the authenticated user
+        const applications = await applicationModel.getAllApplicationsByUserId(
+            userId
+        );
         res.status(200).json({
             success: true,
-            message: "Application List!",
+            message: "User's Applications List!",
             data: applications,
         });
     } catch (error) {
-        console.error("Error getting all applications:", error);
+        console.error("Error getting user's applications:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-// Create an application
-applicationController.post("/", async (req, res) => {
+// Create an application for the logged-in user
+applicationController.post("/", authenticateUser, async (req, res) => {
     try {
+        const userId = req.user.userId; // Get the user ID from the authenticated user
         const { applicationData, jobId } = req.body;
 
         // Check if the job with the given ID exists
@@ -37,12 +42,15 @@ applicationController.post("/", async (req, res) => {
             return res.status(404).json({ error: "Job not found!!" });
         }
 
-        // Add the jobId to the applicationData
+        // Add the jobId and userId to the applicationData
         applicationData.jobId = new ObjectId(jobId);
+        applicationData.userId = new ObjectId(userId);
 
-        const newApplication = await applicationModel.createApplication(
+        const newApplication = await applicationModel.createApplicationByUserId(
+            userId,
             applicationData
         );
+
         res.status(201).json({
             success: true,
             message: "Application created successfully!",
@@ -54,8 +62,8 @@ applicationController.post("/", async (req, res) => {
     }
 });
 
-// Get a application by ID
-applicationController.get("/:id", async (req, res) => {
+// Get a specific application for the logged-in user
+applicationController.get("/:id", authenticateUser, async (req, res) => {
     try {
         const applicationId = req.params.id;
         const application = await applicationModel.getSingleApplication(
@@ -77,8 +85,8 @@ applicationController.get("/:id", async (req, res) => {
     }
 });
 
-// Update a job by ID
-applicationController.put("/:id", async (req, res) => {
+// Update a specific application for the logged-in user
+applicationController.put("/:id", authenticateUser, async (req, res) => {
     try {
         const applicationId = req.params.id;
         const { applicationData, jobId } = req.body;
@@ -112,8 +120,8 @@ applicationController.put("/:id", async (req, res) => {
     }
 });
 
-// Delete a application by ID from parameter
-applicationController.delete("/:id", async (req, res) => {
+// Delete a specific application for the logged-in user
+applicationController.delete("/:id", authenticateUser, async (req, res) => {
     try {
         const applicationId = req.params.id;
         const result = await applicationModel.deleteApplication(applicationId);

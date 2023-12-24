@@ -1,4 +1,3 @@
-// authUtil.js
 import jwt from "jsonwebtoken";
 import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/auth.config.js";
 

@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 import { DATABASE_CONFIG } from "../config/database.config.js";
 
@@ -8,7 +8,6 @@ export class AuthModel {
         this.db = null;
     }
 
-    // Connect to the database
     connect = async () => {
         try {
             await this.client.connect();
@@ -19,7 +18,6 @@ export class AuthModel {
         }
     };
 
-    // Disconnect from the database
     disconnect = async () => {
         try {
             await this.client.close();
@@ -30,25 +28,11 @@ export class AuthModel {
         }
     };
 
-    // Create a new user
     createUser = async (userData) => {
         try {
-            // Hash the user's password before saving to the database
-            const hashedPassword = await this.hashPassword(userData.password);
-
-            // Include hashed password and role in user data
-            const userToCreate = {
-                email: userData.email,
-                password: hashedPassword,
-                firstname: userData.firstname,
-                lastname: userData.lastname,
-                address: userData.address,
-                role: userData.role || "user", // Default role is "user"
-            };
-
             const newUser = await this.db
                 .collection("users")
-                .insertOne(userToCreate);
+                .insertOne(userData);
             return newUser;
         } catch (error) {
             console.error("Error creating user:", error);
@@ -56,7 +40,6 @@ export class AuthModel {
         }
     };
 
-    // Find a user by email
     findUserByEmail = async (email) => {
         try {
             const user = await this.db.collection("users").findOne({ email });
@@ -67,7 +50,6 @@ export class AuthModel {
         }
     };
 
-    // Check if a user with a given email exists
     doesUserExist = async (email) => {
         try {
             const user = await this.db.collection("users").findOne({ email });
@@ -78,7 +60,6 @@ export class AuthModel {
         }
     };
 
-    // Validate user credentials (for login)
     validateUserCredentials = async (email, password) => {
         try {
             const user = await this.db.collection("users").findOne({ email });
@@ -95,7 +76,6 @@ export class AuthModel {
         }
     };
 
-    // Hash the user's password before saving to the database
     hashPassword = async (password) => {
         try {
             const saltRounds = 10;

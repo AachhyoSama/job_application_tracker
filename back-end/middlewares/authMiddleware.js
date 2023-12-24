@@ -19,7 +19,6 @@ export const authenticateUser = (req, res, next) => {
         return res.status(401).json({ error: "Unauthorized: Invalid token!" });
     }
 
-    // Attach the user information to the request for further use
     req.user = decoded;
 
     next();

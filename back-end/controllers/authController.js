@@ -1,35 +1,52 @@
 import express from "express";
+import session from "express-session";
 import { AuthModel } from "../models/authModel.js";
 import { generateToken } from "../utils/authUtil.js";
+import crypto from "crypto";
 import { authenticateUser } from "../middlewares/authMiddleware.js";
 
 const authController = express.Router();
 const authModel = new AuthModel();
 
-// Connect to the database
 authModel.connect();
 
-// Register a new user
+// Generate a random 32-character hexadecimal key for session
+const secretKey = crypto.randomBytes(16).toString("hex");
+
+// Set up session middleware
+authController.use(
+    session({
+        secret: secretKey,
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+
 authController.post("/register", async (req, res) => {
     try {
         const { email, password, firstname, lastname, address, role } =
             req.body;
 
-        // Check if the user with the given email already exists
         const userExists = await authModel.doesUserExist(email);
         if (userExists) {
             return res.status(400).json({ error: "User already exists!" });
         }
 
-        // Create a new user with the provided or default role
-        const newUser = await authModel.createUser({
+        const hashedPassword = await authModel.hashPassword(password);
+
+        const newUser = {
             email,
-            password,
+            password: hashedPassword,
             firstname,
             lastname,
             address,
-            role,
-        });
+            role: role || "user",
+        };
+
+        await authModel.createUser(newUser);
+
+        // Store user data in session
+        req.session.user = newUser;
 
         res.status(201).json({
             success: true,
@@ -42,21 +59,26 @@ authController.post("/register", async (req, res) => {
     }
 });
 
-// Login a user
 authController.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find the user by email
         const user = await authModel.findUserByEmail(email);
 
-        // Check if the user exists and validate credentials
         if (
             user &&
             (await authModel.validateUserCredentials(email, password))
         ) {
-            // Generate a JWT token
             const token = generateToken(user);
+
+            // Store user data in session
+            req.session.user = {
+                email: user.email,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                address: user.address,
+                role: user.role,
+            };
 
             res.status(200).json({
                 success: true,
@@ -77,6 +99,21 @@ authController.post("/login", async (req, res) => {
         console.error("Error logging in user:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
+});
+
+authController.post("/logout", authenticateUser, (req, res) => {
+    // Destroy the session
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Error destroying session:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.status(200).json({
+                success: true,
+                message: "Logout successful!",
+            });
+        }
+    });
 });
 
 export default authController;

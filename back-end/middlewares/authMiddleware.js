@@ -19,6 +19,13 @@ export const authenticateUser = (req, res, next) => {
         return res.status(401).json({ error: "Unauthorized: Invalid token!" });
     }
 
+    // Check if the user is logged out
+    if (req.session && req.session.user === null) {
+        return res
+            .status(401)
+            .json({ error: "Unauthorized: User has been logged out!" });
+    }
+
     req.user = decoded;
 
     next();

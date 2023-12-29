@@ -63,6 +63,11 @@ authController.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Check if the user is not logged out
+        if (req.session.user === null) {
+            return res.status(401).json({ error: "User has been logged out." });
+        }
+
         const user = await authModel.findUserByEmail(email);
 
         if (
@@ -102,18 +107,34 @@ authController.post("/login", async (req, res) => {
 });
 
 authController.post("/logout", authenticateUser, (req, res) => {
-    // Destroy the session
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Error destroying session:", err);
-            res.status(500).json({ error: "Internal Server Error" });
-        } else {
-            res.status(200).json({
-                success: true,
-                message: "Logout successful!",
-            });
+    try {
+        // Check if the user is not already logged out
+        if (req.session.user === null) {
+            return res.status(401).json({ error: "User has been logged out." });
         }
-    });
+
+        // Log the user-specific session data
+        console.log("User Session Data:", req.session.user);
+
+        // Set a "logged out" flag in the session
+        req.session.user = null; // You can also use a specific flag like req.session.userLoggedOut = true;
+
+        // Destroy the session
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error destroying session:", err);
+                res.status(500).json({ error: "Internal Server Error" });
+            } else {
+                res.status(200).json({
+                    success: true,
+                    message: "Logout successful!",
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 export default authController;

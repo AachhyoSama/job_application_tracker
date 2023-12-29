@@ -27,14 +27,11 @@ export class ApplicationModel {
         }
     };
 
-    getAllApplicationsByUserId = async (userId) => {
+    getAllApplications = async () => {
         try {
             const applications = await this.db
                 .collection("applications")
                 .aggregate([
-                    {
-                        $match: { userId: new ObjectId(userId) },
-                    },
                     {
                         $lookup: {
                             from: "jobs",
@@ -70,11 +67,8 @@ export class ApplicationModel {
         }
     };
 
-    createApplicationByUserId = async (userId, applicationData) => {
+    createApplication = async (applicationData) => {
         try {
-            // Add the userId to the applicationData
-            applicationData.userId = new ObjectId(userId);
-
             const newApplication = await this.db
                 .collection("applications")
                 .insertOne(applicationData);

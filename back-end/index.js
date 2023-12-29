@@ -8,8 +8,6 @@ import { jobRoutes } from "./routes/jobRoutes.js";
 import { JobModel } from "./models/jobModel.js";
 import { applicationRoutes } from "./routes/applicationRoutes.js";
 import { ApplicationModel } from "./models/applicationModel.js";
-import { authRoutes } from "./routes/authRoutes.js";
-import { AuthModel } from "./models/authModel.js";
 
 const app = express();
 const port = 8080;
@@ -18,7 +16,6 @@ const port = 8080;
 const companyModel = new CompanyModel();
 const jobModel = new JobModel();
 const applicationModel = new ApplicationModel();
-const authModel = new AuthModel();
 
 // Creating https server in express
 const httpsOptions = {
@@ -35,15 +32,11 @@ app.get("/", (req, res) => {
 
 // Connect to the databases and call the routes
 Promise.all([
-    authModel.connect(),
     companyModel.connect(),
     jobModel.connect(),
     applicationModel.connect(),
 ])
     .then(() => {
-        // Use Authentication Routes
-        app.use("/job-tracker/auth", authRoutes);
-
         // Use company routes
         app.use("/job-tracker/company", companyRoutes);
 

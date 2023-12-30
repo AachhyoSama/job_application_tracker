@@ -1,6 +1,6 @@
 // authUtil.js
 import jwt from "jsonwebtoken";
-import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/auth.config.js";
+import { JWT_SECRET } from "../config/auth.config.js";
 
 export const generateToken = (user) => {
     const payload = {
@@ -9,7 +9,7 @@ export const generateToken = (user) => {
     };
 
     const options = {
-        expiresIn: JWT_EXPIRES_IN, // Token expiration time
+        expiresIn: "1h", // Token expiration time
     };
 
     return jwt.sign(payload, JWT_SECRET, options);

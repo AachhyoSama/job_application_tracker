@@ -1,125 +1,95 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-import apiService from "./services/apiService.js";
-
-import CompanyList from "./components/Companies/CompanyList.js";
-import JobList from "./components/Jobs/JobList.js";
-import ApplicationList from "./components/Applications/ApplicationList.js";
-
-import CompanyForm from "./components/Companies/CompanyForm.js";
-import JobForm from "./components/Jobs/JobForm.js";
-import ApplicationForm from "./components/Applications/ApplicationForm.js";
-
-import CompanyDetails from "./components/Companies/CompanyDetails.js";
-import JobDetails from "./components/Jobs/JobDetails.js";
-import ApplicationDetails from "./components/Applications/ApplicationDetails.js";
-
-import { WelcomeComponent } from "./components/WelcomeComponent.js";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Link,
+    Navigate,
+} from "react-router-dom";
+import Dashboard from "./components/Dashboard/Dashboard.js";
+import Register from "./components/Auth/Register.js";
+import Login from "./components/Auth/Login.js";
+import Home from "./components/Home.js";
 
 const App = () => {
-    const [companyCount, setCompanyCount] = useState(0);
-    const [jobCount, setJobCount] = useState(0);
-    const [applicationCount, setApplicationCount] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
+    // Check for token on app load
     useEffect(() => {
-        const fetchCounts = async () => {
-            try {
-                const companies = await apiService.get("/company", {
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                const jobs = await apiService.get("/jobs", {
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                const applications = await apiService.get("/applications", {
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                setCompanyCount(companies.data.data.length);
-                setJobCount(jobs.data.data.length);
-                setApplicationCount(applications.data.data.length);
-            } catch (error) {
-                console.error("Error fetching counts:", error);
-            }
-        };
-
-        fetchCounts();
+        const storedToken = localStorage.getItem("jwtToken");
+        if (storedToken) {
+            setIsLoggedIn(true);
+        }
+        setIsLoading(false); // Set loading to false once the check is done
     }, []);
+
+    const handleLogout = () => {
+        // Remove token from local storage
+        localStorage.removeItem("jwtToken");
+        // Update state to reflect logout
+        setIsLoggedIn(false);
+    };
+
+    if (isLoading) {
+        // Display a loading indicator while checking for the token
+        return <div>Loading...</div>;
+    }
 
     return (
         <Router>
-            <div className="dashboard">
+            <div className="job-tracker-app">
                 <header>
                     <div className="logo">
                         <Link to="/">Job Application Tracker</Link>
                     </div>
+
+                    <nav>
+                        <ul>
+                            {!isLoggedIn && (
+                                <>
+                                    <li>
+                                        <Link to="/register">Register</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/login">Login</Link>
+                                    </li>
+                                </>
+                            )}
+
+                            {isLoggedIn && (
+                                <li>
+                                    {/* Call handleLogout when Logout is clicked */}
+                                    <Link to="/" onClick={handleLogout}>
+                                        Logout
+                                    </Link>
+                                </li>
+                            )}
+                        </ul>
+                    </nav>
                 </header>
-                <div className="dashboard-content">
-                    <div className="summary-card">
-                        <h3>Companies</h3>
-                        <p>Total Companies: {companyCount} </p>
-                        <Link to="/companies">View All Companies</Link>
-                    </div>
 
-                    <div className="summary-card">
-                        <h3>Jobs</h3>
-                        <p>Total Jobs: {jobCount} </p>
-                        <Link to="/jobs">View All Jobs</Link>
-                    </div>
-
-                    <div className="summary-card">
-                        <h3>Applications</h3>
-                        <p>Total Applications: {applicationCount} </p>
-                        <Link to="/applications">View All Applications</Link>
-                    </div>
-                </div>
-
-                <div className="main-container">
+                <div className="dashboard">
                     <Routes>
-                        <Route path="/" element={<WelcomeComponent />} />
-                        <Route path="/companies" element={<CompanyList />} />
+                        {/* Render Home component at /home route */}
+                        <Route path="/home" element={<Home />} />
                         <Route
-                            path="/company-details/:companyId"
-                            element={<CompanyDetails />}
+                            path="/*"
+                            element={
+                                !isLoggedIn ? (
+                                    // Render Home component when not logged in
+                                    <Navigate to="/home" />
+                                ) : (
+                                    // Render Dashboard component when logged in
+                                    <Dashboard setIsLoggedIn={setIsLoggedIn} />
+                                )
+                            }
                         />
-                        <Route path="/jobs" element={<JobList />} />
+                        <Route path="/register" element={<Register />} />
                         <Route
-                            path="/applications"
-                            element={<ApplicationList />}
-                        />
-
-                        <Route path="/add-company" element={<CompanyForm />} />
-                        <Route
-                            path="/edit-company/:companyId"
-                            element={<CompanyForm />}
-                        />
-
-                        <Route path="/add-job" element={<JobForm />} />
-                        <Route path="/edit-job/:jobId" element={<JobForm />} />
-                        <Route
-                            path="/job-details/:jobId"
-                            element={<JobDetails />}
-                        />
-
-                        <Route
-                            path="/add-application"
-                            element={<ApplicationForm />}
-                        />
-                        <Route
-                            path="/edit-application/:applicationId"
-                            element={<ApplicationForm />}
-                        />
-                        <Route
-                            path="/application-details/:applicationId"
-                            element={<ApplicationDetails />}
+                            path="/login"
+                            element={<Login setIsLoggedIn={setIsLoggedIn} />}
                         />
                     </Routes>
                 </div>

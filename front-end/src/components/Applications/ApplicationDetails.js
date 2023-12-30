@@ -8,12 +8,14 @@ const ApplicationDetails = () => {
     const [applicationDetails, setApplicationDetails] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem("jwtToken");
         const fetchApplicationDetails = async () => {
             try {
                 const response = await apiService.get(
                     `/applications/${applicationId}`,
                     {
                         headers: {
+                            Authorization: `Bearer ${token}`,
                             "ngrok-skip-browser-warning": "true",
                         },
                     }

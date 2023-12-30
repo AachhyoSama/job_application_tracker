@@ -1,10 +1,9 @@
-// authUtil.js
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config/auth.config.js";
 
 export const generateToken = (user) => {
     const payload = {
-        userId: user.userId,
+        userId: user._id,
         email: user.email,
     };
 

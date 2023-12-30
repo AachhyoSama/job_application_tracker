@@ -40,11 +40,13 @@ const ApplicationForm = () => {
     }, [applicationId]);
 
     const fetchApplicationDetails = async () => {
+        const token = localStorage.getItem("jwtToken");
         try {
             const response = await apiService.get(
                 `/applications/${applicationId}`,
                 {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         "ngrok-skip-browser-warning": "true",
                     },
                 }
@@ -68,6 +70,7 @@ const ApplicationForm = () => {
     };
 
     const handleSubmit = async (e) => {
+        const token = localStorage.getItem("jwtToken");
         e.preventDefault();
 
         try {
@@ -84,11 +87,20 @@ const ApplicationForm = () => {
                 // If applicationId is provided, update existing application
                 await apiService.put(
                     `/applications/${applicationId}`,
-                    applicationPayLoad
+                    applicationPayLoad,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
                 );
             } else {
                 // Otherwise, create a new application
-                await apiService.post("/applications", applicationPayLoad);
+                await apiService.post("/applications", applicationPayLoad, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
             }
 
             // Redirect to the application list after submission with success message as a query parameter

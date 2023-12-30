@@ -22,12 +22,16 @@ const ApplicationList = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const token = localStorage.getItem("jwtToken");
+
     useEffect(() => {
         // Fetch applications from your API when the component mounts
         const fetchApplications = async () => {
             try {
+                const token = localStorage.getItem("jwtToken");
                 const response = await apiService.get("/applications", {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         "ngrok-skip-browser-warning": "true",
                     },
                 });
@@ -61,7 +65,11 @@ const ApplicationList = () => {
     const handleDeleteApplication = async (applicationId) => {
         try {
             // API to delete the application
-            await apiService.delete(`/applications/${applicationId}`);
+            await apiService.delete(`/applications/${applicationId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setSuccessMessage("Application deleted successfully!");
         } catch (error) {
             console.error("Error deleting application:", error);

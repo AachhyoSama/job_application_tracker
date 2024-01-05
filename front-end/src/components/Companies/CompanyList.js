@@ -81,6 +81,8 @@ const CompanyList = () => {
                         <th>Company Name</th>
                         <th>Location</th>
                         <th>Website</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -89,7 +91,12 @@ const CompanyList = () => {
                         companies.map((company) => (
                             <tr key={company._id}>
                                 <td>{company.name}</td>
-                                <td>{company.location}</td>
+                                <td>
+                                    {`${company.location.address1}, 
+                                        ${company.location.city}, 
+                                        ${company.location.state}, 
+                                        ${company.location.zip}`}
+                                </td>
                                 <td>
                                     <a
                                         href={company.website}
@@ -99,6 +106,8 @@ const CompanyList = () => {
                                         {company.website}
                                     </a>
                                 </td>
+                                <td>{company.email}</td>
+                                <td>{company.phone}</td>
                                 <td>
                                     <button
                                         onClick={() =>
@@ -135,7 +144,7 @@ const CompanyList = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="4">No companies available.</td>
+                            <td colSpan="6">No companies available.</td>
                         </tr>
                     )}
                 </tbody>

@@ -16,10 +16,18 @@ import CompanyDetails from "../Companies/CompanyDetails.js";
 import JobDetails from "../Jobs/JobDetails.js";
 import ApplicationDetails from "../Applications/ApplicationDetails.js";
 
+import { useCount } from "../../context/CountContext.js";
+
 const Dashboard = () => {
+    const { countState, updateCounts } = useCount();
     return (
         <div>
-            <SummaryCard />
+            <SummaryCard
+                companyCount={countState.companyCount}
+                jobCount={countState.jobCount}
+                applicationCount={countState.applicationCount}
+                updateCounts={updateCounts}
+            />
 
             <div className="main-container">
                 <Routes>

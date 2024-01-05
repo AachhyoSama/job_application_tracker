@@ -162,8 +162,7 @@ label {
 }
 
 select,
-input,
-textarea {
+input {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -173,7 +172,19 @@ textarea {
 }
 
 textarea {
-  height: 100px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical; /* Allow vertical resizing */
+  transition: border-color 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #1c6dc4;
 }
 
 /* Styling for success message */
@@ -187,26 +198,34 @@ textarea {
 
 /* Shared form styles */
 form {
-  margin: 20px;
+  margin: 20px auto;
+  max-width: 400px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 400px; /* Adjust the width as needed */
-  margin: 20px auto; /* Center the form */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 label {
   margin-bottom: 10px;
   display: block;
+  font-weight: bold;
+  color: #333;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1c6dc4;
 }
 
 button {
@@ -214,7 +233,7 @@ button {
   color: #fff;
   border: none;
   border-radius: 5px;
-  padding: 8px 14px;
+  padding: 12px 18px;
   margin-right: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -226,10 +245,6 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #355829;
-}
-
-button:hover {
-  background-color: #0056b3;
 }
 
 button:hover {
@@ -249,4 +264,8 @@ button:hover {
   color: red;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.single-element-details {
+  text-align: left;
 }

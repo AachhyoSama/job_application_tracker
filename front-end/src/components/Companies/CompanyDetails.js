@@ -28,12 +28,18 @@ const CompanyDetails = () => {
     }, [companyId]);
 
     return (
-        <div>
+        <div className="single-element-details">
             <button onClick={() => navigate("/companies")}>Back</button>
             {companyDetails ? (
                 <>
                     <h2>{companyDetails.name}</h2>
-                    <p>Location: {companyDetails.location}</p>
+                    <p>
+                        Location:{" "}
+                        {`${companyDetails.location.address1}, 
+                        ${companyDetails.location.city}, 
+                        ${companyDetails.location.state}, 
+                        ${companyDetails.location.zip}`}
+                    </p>
                     <p>
                         Website:{" "}
                         <a
@@ -44,6 +50,10 @@ const CompanyDetails = () => {
                             {companyDetails.website}
                         </a>
                     </p>
+                    <p>Email: {companyDetails.email}</p>
+                    <p>Phone: {companyDetails.phone}</p>
+                    <p>Industry: {companyDetails.industry.join(", ")}</p>
+                    <p>Description: {companyDetails.description}</p>
                 </>
             ) : (
                 <p>Loading company details...</p>

@@ -26,6 +26,89 @@ export class CompanyModel {
         }
     };
 
+    validateCompanyData = async (companyData) => {
+        await this.db.command({
+            collMod: "company",
+            validator: {
+                $jsonSchema: {
+                    bsonType: "object",
+                    required: [
+                        "name",
+                        "location",
+                        "website",
+                        "phone",
+                        "email",
+                        "description",
+                        "industry",
+                    ],
+                    properties: {
+                        name: {
+                            bsonType: "string",
+                            description:
+                                "'name' must be a string and is required",
+                        },
+                        location: {
+                            bsonType: "object",
+                            required: ["address1", "city", "state", "zip"],
+                            properties: {
+                                address1: {
+                                    bsonType: "string",
+                                    description:
+                                        "'Address 2' has to be string and is required",
+                                },
+                                address2: {
+                                    bsonType: "string",
+                                    description: "'Address 1' has to be string",
+                                },
+                                city: {
+                                    bsonType: "string",
+                                    description:
+                                        "'City' has to be string and is required",
+                                },
+                                state: {
+                                    bsonType: "string",
+                                    description:
+                                        "'State' has to be string and is required",
+                                },
+                                zip: {
+                                    bsonType: "string",
+                                    description:
+                                        "'Zip' has to be string and is required",
+                                },
+                            },
+                        },
+                        website: {
+                            bsonType: "string",
+                            description:
+                                "'website' must be a string and is required",
+                        },
+                        phone: {
+                            bsonType: "string",
+                            description:
+                                "'phone' must be a string and is required",
+                        },
+                        email: {
+                            bsonType: "string",
+                            description:
+                                "'email' must be a string and is required",
+                        },
+                        description: {
+                            bsonType: "string",
+                            description:
+                                "'Description' must be a string and is required",
+                        },
+                        industry: {
+                            bsonType: "array",
+                            description:
+                                "'Industry' must be a string and is required",
+                        },
+                    },
+                },
+            },
+            validationLevel: "strict",
+        });
+    };
+
     getAllCompanies = async () => {
         try {
             const companies = await this.db
@@ -42,18 +125,25 @@ export class CompanyModel {
 
     createCompany = async (companyData) => {
         try {
+            // Validate the company data before adding it to the database
+            this.validateCompanyData(companyData);
+
             const newCompany = await this.db
                 .collection("company")
                 .insertOne(companyData);
+
             return newCompany;
         } catch (error) {
-            console.error("Error getting all companies:", error);
+            console.error("Error creating company:", error);
             throw error;
         }
     };
 
     updateCompany = async (companyId, updatedCompanyData) => {
         try {
+            // Validate the company data before adding it to the database
+            this.validateCompanyData(updatedCompanyData);
+
             const result = await this.db
                 .collection("company")
                 .updateOne(

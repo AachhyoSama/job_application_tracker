@@ -34,7 +34,7 @@ companyController.post("/", async (req, res) => {
         });
     } catch (error) {
         console.error("Error creating company:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: error });
     }
 });
 

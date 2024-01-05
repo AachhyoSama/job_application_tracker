@@ -1,63 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import apiService from "../../services/apiService.js";
+import { useCount } from "../../context/CountContext";
 
 const SummaryCard = () => {
-    const [companyCount, setCompanyCount] = useState(0);
-    const [jobCount, setJobCount] = useState(0);
-    const [applicationCount, setApplicationCount] = useState(0);
+    const { countState, updateCounts } = useCount();
 
     useEffect(() => {
-        const fetchCounts = async () => {
-            try {
-                const token = localStorage.getItem("jwtToken");
-                const companies = await apiService.get("/company", {
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                const jobs = await apiService.get("/jobs", {
-                    headers: {
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                const applications = await apiService.get("/applications", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "ngrok-skip-browser-warning": "true",
-                    },
-                });
-
-                setCompanyCount(companies.data.data.length);
-                setJobCount(jobs.data.data.length);
-                setApplicationCount(applications.data.data.length);
-            } catch (error) {
-                console.error("Error fetching counts:", error);
-            }
-        };
-
-        fetchCounts();
-    }, []);
+        // Call updateCounts when the component mounts
+        updateCounts();
+    }, [updateCounts]);
 
     return (
         <div className="dashboard-content">
+            {/* ... (existing code) */}
             <div className="summary-card">
                 <h3>Companies</h3>
-                <p>Total Companies: {companyCount} </p>
+                <p>Total Companies: {countState.companyCount} </p>
                 <Link to="/companies">View All Companies</Link>
             </div>
 
             <div className="summary-card">
                 <h3>Jobs</h3>
-                <p>Total Jobs: {jobCount} </p>
+                <p>Total Jobs: {countState.jobCount} </p>
                 <Link to="/jobs">View All Jobs</Link>
             </div>
 
             <div className="summary-card">
                 <h3>Applications</h3>
-                <p>Total Applications: {applicationCount} </p>
+                <p>Total Applications: {countState.applicationCount} </p>
                 <Link to="/applications">View All Applications</Link>
             </div>
         </div>

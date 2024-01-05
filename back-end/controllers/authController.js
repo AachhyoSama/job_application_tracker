@@ -45,9 +45,7 @@ authController.post("/register", async (req, res) => {
 authController.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await authModel.findUserByEmail(email);
-        console.log(user);
 
         if (
             user &&

@@ -200,7 +200,7 @@ const CompanyForm = () => {
                         value={company.description}
                         onChange={handleChange}
                         required
-                        rows={4} // Set the number of rows as needed
+                        rows={4}
                     />
                 </label>
                 <label>

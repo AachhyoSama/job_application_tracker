@@ -29,18 +29,18 @@ jobController.get("/", async (req, res) => {
 // Create a Job
 jobController.post("/", async (req, res) => {
     try {
-        const { jobData, companyId } = req.body;
+        const { job_data, company_id } = req.body;
 
         // Check if the company with the given ID exists
-        const companyExists = await companyModel.getSingleCompany(companyId);
+        const companyExists = await companyModel.getSingleCompany(company_id);
         if (!companyExists) {
             return res.status(404).json({ error: "Company not found!!" });
         }
 
-        // Add the companyId to the jobData
-        jobData.companyId = new ObjectId(companyId);
+        // Add the company_id to the job_data
+        job_data.company_id = new ObjectId(company_id);
 
-        const newJob = await jobModel.createJob(jobData);
+        const newJob = await jobModel.createJob(job_data);
         res.status(201).json({
             success: true,
             message: "Job created successfully!",
@@ -48,7 +48,7 @@ jobController.post("/", async (req, res) => {
         });
     } catch (error) {
         console.error("Error creating job:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ success: false, error });
     }
 });
 
@@ -77,18 +77,18 @@ jobController.get("/:id", async (req, res) => {
 jobController.put("/:id", async (req, res) => {
     try {
         const jobId = req.params.id;
-        const { jobData, companyId } = req.body;
+        const { job_data, company_id } = req.body;
 
         // Check if the company with the given ID exists
-        const companyExists = await companyModel.getSingleCompany(companyId);
+        const companyExists = await companyModel.getSingleCompany(company_id);
         if (!companyExists) {
             return res.status(404).json({ error: "Company not found!!" });
         }
 
-        // Add the companyId to the jobData
-        jobData.companyId = new ObjectId(companyId);
+        // Add the company_id to the job_data
+        job_data.company_id = new ObjectId(company_id);
 
-        const result = await jobModel.updateJob(jobId, jobData);
+        const result = await jobModel.updateJob(jobId, job_data);
 
         if (!result.success) {
             return res.status(404).json({ error: "Job not found" });
@@ -101,7 +101,7 @@ jobController.put("/:id", async (req, res) => {
         });
     } catch (error) {
         console.error("Error updating job:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ success: false, error });
     }
 });
 

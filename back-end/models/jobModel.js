@@ -27,6 +27,69 @@ export class JobModel {
         }
     };
 
+    validateJobData = async () => {
+        await this.db.command({
+            collMod: "jobs",
+            validator: {
+                $jsonSchema: {
+                    bsonType: "object",
+                    required: [
+                        "title",
+                        "job_office_location",
+                        "job_type",
+                        "description",
+                        "requirements",
+                        "qualifications",
+                        "salary",
+                        "job_portal_link",
+                    ],
+                    properties: {
+                        title: {
+                            bsonType: "string",
+                            description:
+                                "'Title' has to be string and is required",
+                        },
+                        job_office_location: {
+                            bsonType: "string",
+                            description: "'Office Location' has to be string",
+                        },
+                        job_type: {
+                            enum: ["Remote", "Hybrid", "On-site"],
+                            description:
+                                "'Job Type' can only be one of the enum values and is required",
+                        },
+                        description: {
+                            bsonType: "string",
+                            description:
+                                "'Description' has to be string and is required",
+                        },
+                        requirements: {
+                            bsonType: "string",
+                            description:
+                                "'Requiments' has to be string and is required",
+                        },
+                        qualifications: {
+                            bsonType: "string",
+                            description:
+                                "'Qualifications' has to be string and is required",
+                        },
+                        salary: {
+                            bsonType: "string",
+                            description:
+                                "'Salary' has to be string and is required",
+                        },
+                        job_portal_link: {
+                            bsonType: "string",
+                            description:
+                                "'Job Portal Link' has to be string and is required",
+                        },
+                    },
+                },
+            },
+            validationLevel: "strict",
+        });
+    };
+
     getAllJobs = async () => {
         try {
             const jobs = await this.db
@@ -35,7 +98,7 @@ export class JobModel {
                     {
                         $lookup: {
                             from: "company",
-                            localField: "companyId",
+                            localField: "company_id",
                             foreignField: "_id",
                             as: "company",
                         },
@@ -56,9 +119,12 @@ export class JobModel {
         }
     };
 
-    createJob = async (jobData) => {
+    createJob = async (job_data) => {
         try {
-            const newJob = await this.db.collection("jobs").insertOne(jobData);
+            // Validating the data before adding to DB
+            this.validateJobData(job_data);
+            const newJob = await this.db.collection("jobs").insertOne(job_data);
+
             return newJob;
         } catch (error) {
             console.error("Error creating Job:", error);
@@ -77,7 +143,7 @@ export class JobModel {
                     {
                         $lookup: {
                             from: "company",
-                            localField: "companyId",
+                            localField: "company_id",
                             foreignField: "_id",
                             as: "company",
                         },
@@ -98,13 +164,15 @@ export class JobModel {
         }
     };
 
-    updateJob = async (jobId, jobData) => {
+    updateJob = async (jobId, job_data) => {
         try {
+            // Validating the data before adding to DB
+            this.validateJobData(job_data);
             const result = await this.db
                 .collection("jobs")
                 .findOneAndUpdate(
                     { _id: new ObjectId(jobId) },
-                    { $set: jobData },
+                    { $set: job_data },
                     { returnDocument: "after" }
                 );
 

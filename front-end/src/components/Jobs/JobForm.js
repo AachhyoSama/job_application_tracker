@@ -6,13 +6,14 @@ import "../../App.css";
 const JobForm = () => {
     const [job, setJob] = useState({
         title: "",
+        job_office_location: "",
         job_type: "",
-        salary: "",
-        location: "",
         description: "",
         requirements: "",
-        job_link: "",
-        companyId: "",
+        qualifications: "",
+        salary: "",
+        job_portal_link: "",
+        company_id: "",
     });
 
     const [companies, setCompanies] = useState([]); // State to store the list of companies
@@ -53,13 +54,14 @@ const JobForm = () => {
             const jobDetails = response.data.data;
             setJob({
                 title: jobDetails.title,
+                job_office_location: jobDetails.job_office_location,
                 job_type: jobDetails.job_type,
-                salary: jobDetails.salary,
-                location: jobDetails.location,
                 description: jobDetails.description,
                 requirements: jobDetails.requirements,
-                job_link: jobDetails.job_link,
-                companyId: jobDetails.company._id, // Populate companyId from jobDetails
+                qualifications: jobDetails.qualifications,
+                salary: jobDetails.salary,
+                job_portal_link: jobDetails.job_portal_link,
+                company_id: jobDetails.company._id, // Populate company_id from jobDetails
             });
         } catch (error) {
             console.error("Error fetching job details:", error);
@@ -75,16 +77,17 @@ const JobForm = () => {
 
         try {
             const jobPayload = {
-                jobData: {
+                job_data: {
                     title: job.title,
+                    job_office_location: job.job_office_location,
                     job_type: job.job_type,
-                    salary: job.salary,
-                    location: job.location,
                     description: job.description,
                     requirements: job.requirements,
-                    job_link: job.job_link,
+                    qualifications: job.qualifications,
+                    salary: job.salary,
+                    job_portal_link: job.job_portal_link,
                 },
-                companyId: job.companyId,
+                company_id: job.company_id,
             };
 
             if (jobId) {
@@ -127,8 +130,8 @@ const JobForm = () => {
                 <label>
                     Company:
                     <select
-                        name="companyId"
-                        value={job.companyId}
+                        name="company_id"
+                        value={job.company_id}
                         onChange={handleChange}
                         required
                     >
@@ -144,22 +147,28 @@ const JobForm = () => {
                 </label>
 
                 <label>
-                    Job Type (Full Time / Part Time/ Internship, etc):
-                    <input
-                        type="text"
+                    Job Type:
+                    <select
                         name="job_type"
                         value={job.job_type}
                         onChange={handleChange}
                         required
-                    />
+                    >
+                        <option value="" disabled>
+                            Select Job Type
+                        </option>
+                        <option value="Remote">Remote</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="On-site">On-site</option>
+                    </select>
                 </label>
 
                 <label>
-                    Location:
+                    Job Office Location:
                     <input
                         type="text"
-                        name="location"
-                        value={job.location}
+                        name="job_office_location"
+                        value={job.job_office_location}
                         onChange={handleChange}
                         required
                     />
@@ -177,11 +186,11 @@ const JobForm = () => {
                 </label>
 
                 <label>
-                    Job Link:
+                    Job Portal Link:
                     <input
                         type="text"
-                        name="job_link"
-                        value={job.job_link}
+                        name="job_portal_link"
+                        value={job.job_portal_link}
                         onChange={handleChange}
                         required
                     />
@@ -194,6 +203,7 @@ const JobForm = () => {
                         value={job.description}
                         onChange={handleChange}
                         required
+                        rows={4}
                     />
                 </label>
 
@@ -204,6 +214,18 @@ const JobForm = () => {
                         value={job.requirements}
                         onChange={handleChange}
                         required
+                        rows={4}
+                    />
+                </label>
+
+                <label>
+                    Qualifications:
+                    <textarea
+                        name="qualifications"
+                        value={job.qualifications}
+                        onChange={handleChange}
+                        required
+                        rows={4}
                     />
                 </label>
 

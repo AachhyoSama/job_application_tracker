@@ -28,25 +28,26 @@ const JobDetails = () => {
     }, [jobId]);
 
     return (
-        <div>
+        <div className="single-element-details">
             <button onClick={() => navigate("/jobs")}>Back</button>
             {jobDetails ? (
                 <>
                     <h2>{jobDetails.title}</h2>
                     <p>Company: {jobDetails.company.name}</p>
-                    <p>Job Location: {jobDetails.location}</p>
+                    <p>Job Office Location: {jobDetails.job_office_location}</p>
                     <p>Job Type: {jobDetails.job_type}</p>
                     <p>Description: {jobDetails.description}</p>
                     <p>Requirements: {jobDetails.requirements}</p>
+                    <p>Qualifications: {jobDetails.qualifications}</p>
                     <p>Salary: {jobDetails.salary}</p>
                     <p>
                         Job Link:{" "}
                         <a
-                            href={jobDetails.job_link}
+                            href={jobDetails.job_portal_link}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            {jobDetails.job_link}
+                            {jobDetails.job_portal_link}
                         </a>
                     </p>
                 </>

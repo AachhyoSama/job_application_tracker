@@ -81,8 +81,8 @@ const JobList = () => {
                         <th>Title</th>
                         <th>Company</th>
                         <th>Location</th>
+                        <th>Type</th>
                         <th>Salary</th>
-                        <th>Job Link</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -92,17 +92,9 @@ const JobList = () => {
                             <tr key={job._id}>
                                 <td>{job.title}</td>
                                 <td>{job.company.name}</td>
-                                <td>{job.location}</td>
+                                <td>{job.job_office_location}</td>
+                                <td>{job.job_type}</td>
                                 <td>{job.salary}</td>
-                                <td>
-                                    <a
-                                        href={job.job_link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {job.job_link}
-                                    </a>
-                                </td>
                                 <td>
                                     <button
                                         onClick={() => showJobDetails(job._id)}

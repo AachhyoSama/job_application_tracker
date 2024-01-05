@@ -1,5 +1,4 @@
-/* App.css */
-
+/* General Styles */
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -7,6 +6,7 @@ body {
   background-color: #f4f4f4;
 }
 
+/* Dashboard Styles */
 .dashboard {
   max-width: 1200px;
   margin: 20px auto;
@@ -53,6 +53,7 @@ nav a:hover {
   background-color: #555;
 }
 
+/* Dashboard Content Styles */
 .dashboard-content {
   display: flex;
   justify-content: space-around;
@@ -63,33 +64,32 @@ nav a:hover {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   margin-bottom: 20px;
 }
 
 .summary-card h3 {
-  color: #1c1e21; 
+  color: #1c1e21;
   margin-bottom: 10px;
 }
 
 .summary-card p {
-  color: #495057; 
+  color: #495057;
 }
 
 .summary-card a {
   color: #135ba7;
   text-decoration: none;
-  display: inline-block; 
-  margin-top: 15px; 
-  font-weight: bold; 
+  display: inline-block;
+  margin-top: 15px;
+  font-weight: bold;
   transition: color 0.3s;
 }
 
 .summary-card a:hover {
-  color: #133e6c; 
+  color: #133e6c;
 }
-
 
 .main-container {
   background-color: #f4f4f4;
@@ -99,7 +99,7 @@ nav a:hover {
   text-align: center;
 }
 
-/* For the lists */
+/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -120,7 +120,7 @@ th {
   color: white;
 }
 
-/* CSS for button styling */
+/* Button Styles */
 button {
   background-color: #1c6dc4;
   color: #fff;
@@ -144,11 +144,7 @@ button:hover {
   background-color: #0056b3;
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-
-/* For forms */
+/* Form Styles */
 form {
   margin: 20px;
   padding: 20px;
@@ -162,7 +158,8 @@ label {
 }
 
 select,
-input {
+input,
+textarea {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -172,14 +169,7 @@ input {
 }
 
 textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  resize: vertical; /* Allow vertical resizing */
-  transition: border-color 0.3s;
+  resize: vertical;
 }
 
 textarea:focus {
@@ -187,7 +177,7 @@ textarea:focus {
   border-color: #1c6dc4;
 }
 
-/* Styling for success message */
+/* Success Message Styles */
 .success-message {
   background-color: #3d8325;
   color: #ffffff;
@@ -196,76 +186,14 @@ textarea:focus {
   border-radius: 5px;
 }
 
-/* Shared form styles */
-form {
-  margin: 20px auto;
-  max-width: 400px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-label {
-  margin-bottom: 10px;
-  display: block;
-  font-weight: bold;
-  color: #333;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  transition: border-color 0.3s;
-}
-
-input:focus {
-  outline: none;
-  border-color: #1c6dc4;
-}
-
-button {
-  background-color: #1c6dc4;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 12px 18px;
-  margin-right: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button[type="submit"] {
-  background-color: #389e16;
-}
-
-button[type="submit"]:hover {
-  background-color: #355829;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Styling for success message */
-.success-message {
-  background-color: #3d8325;
-  color: #ffffff;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-}
-
+/* Error Message Styles */
 .error-message {
   color: red;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
+/* Single Element Details Styles */
 .single-element-details {
   text-align: left;
 }
